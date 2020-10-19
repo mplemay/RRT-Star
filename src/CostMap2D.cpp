@@ -6,7 +6,6 @@
 /**
  * Updates a value at a location.
  *
- * @tparam bool The data type to use for the cost map.
  * @param point The point to set the value for.
  * @param value The value to associate with a point.
  * @return Returns the old value if there is one.
@@ -39,7 +38,6 @@ std::optional<bool> Costmap2D::update(const Point2D &point, const bool &value) {
 /**
  * Returns the value at the give point.
  *
- * @tparam bool The data type to use for the cost map.
  * @param point The point to get the value of.
  * @return The value associated with a point.
  */
@@ -51,7 +49,6 @@ std::optional<bool> Costmap2D::get(const Point2D &point) const {
 /**
  * Returns a normal distribution of the values based on the maxima and minima.
  *
- * @tparam bool The data type to use for the cost map.
  * @param waypoints Additional values to adjust the maxima and minima with.
  * @return The random normal distribution of x and y values.
  */
@@ -88,7 +85,6 @@ std::tuple<std::uniform_int_distribution<>, std::uniform_int_distribution<>> Cos
 /**
  * Checks if a value has been set in the cost map.
  *
- * @tparam bool The data type to use for the cost map.
  * @param point The point to check for.
  * @return true if the value is in the cost map; false otherwise.
  */
