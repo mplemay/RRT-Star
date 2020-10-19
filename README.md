@@ -39,6 +39,7 @@ meson compile
 ## Usage
 ```
 cd <project_root_dir>/build*
+chmod +x example
 ./example
 Enter the size of the boarder square: 100
 Enter the step size (i.e. double): 5.0

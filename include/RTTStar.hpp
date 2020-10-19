@@ -2,6 +2,7 @@
 
 #include <chrono>  // NOLINT [build/c++11]
 #include <map>
+#include <memory>
 #include <random>
 #include <tuple>
 #include <vector>
@@ -13,7 +14,7 @@
  */
 class RTTStar {
  public:
-  explicit RTTStar(const Costmap2D &cost_map, double_t epsilon,
+  explicit RTTStar(const std::unique_ptr<CostMap2D> cost_map, double_t epsilon,
                    double_t radius) noexcept;
 
   std::vector<Point2D> initial_path(const Point2D &start, const Point2D &goal);
@@ -29,7 +30,7 @@ class RTTStar {
   Point2D steer(const Point2D &x_nearest, const Point2D &x);
   bool obstacle_free(const Point2D &x_nearest, const Point2D &x_new);
 
-  const Costmap2D &cost_map;
+  const std::unique_ptr<CostMap2D> cost_map;
   std::optional<Point2D> start_point, end_point;
   std::map<Point2D, double_t> costs;
   std::map<Point2D, Point2D> relations;
