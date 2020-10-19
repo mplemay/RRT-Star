@@ -1,7 +1,9 @@
 #include <algorithm>
 #include <iostream>
+#include <memory>
 #include <numeric>
 #include <tuple>
+#include <utility>
 #include <vector>
 
 #include "CostMap2D.hpp"
@@ -42,8 +44,8 @@ Point2D prompt_point() {
  * @param border_size The size of the borders.
  * @return The populated cost map.
  */
-Costmap2D make_cost_map(const size_t &border_size) {
-  Costmap2D cost_map;
+std::unique_ptr<CostMap2D> make_cost_map(const size_t &border_size) {
+  auto cost_map = std::make_unique<CostMap2D>();
 
   std::vector<size_t> indices(border_size);
   std::iota(indices.begin(), indices.end(), 0);
@@ -58,7 +60,7 @@ Costmap2D make_cost_map(const size_t &border_size) {
         std::for_each(indices.begin(), indices.end(),
                       [&cost_map, &distribution, &generator](const auto &i) {
                         if (distribution(generator)) {
-                          cost_map.update(std::make_tuple(i, 0), true);
+                          cost_map->update(std::make_tuple(i, 0), true);
                         }
                       });
       });
@@ -69,7 +71,7 @@ Costmap2D make_cost_map(const size_t &border_size) {
 int main() {
   const auto border_size =
       prompt<size_t>("Enter the size of the boarder square: ");
-  const auto cost_map = make_cost_map(border_size);
+  auto cost_map = make_cost_map(border_size);
   const auto step_size =
       prompt<double_t>("Enter the step size (i.e. double): ");
   const auto radius = prompt<double_t>(
@@ -78,7 +80,7 @@ int main() {
       "Enter the amount of time the search should continue for after getting "
       "an initial path (in milliseconds): ");
 
-  RTTStar rtt_star(cost_map, step_size, radius);
+  RTTStar rtt_star(std::move(cost_map), step_size, radius);
 
   std::cout << "Where should the algorithm search start point be?" << std::endl;
   const auto start_point = prompt_point();

@@ -10,7 +10,7 @@
  * @param value The value to associate with a point.
  * @return Returns the old value if there is one.
  */
-std::optional<bool> Costmap2D::update(const Point2D &point, const bool &value) {
+std::optional<bool> CostMap2D::update(const Point2D &point, const bool &value) {
   // If the minimum values was previously set
   if (this->max_y.has_value() && this->max_x.has_value() &&
       this->min_y.has_value() && this->min_x.has_value()) {
@@ -43,7 +43,7 @@ std::optional<bool> Costmap2D::update(const Point2D &point, const bool &value) {
  * @param point The point to get the value of.
  * @return The value associated with a point.
  */
-std::optional<bool> Costmap2D::get(const Point2D &point) const {
+std::optional<bool> CostMap2D::get(const Point2D &point) const {
   const auto loc = this->sparse_costmap.find(point);
   return loc != this->sparse_costmap.end() ? std::optional<bool>{loc->second}
                                            : std::nullopt;
@@ -56,7 +56,7 @@ std::optional<bool> Costmap2D::get(const Point2D &point) const {
  * @return The random normal distribution of x && y values.
  */
 std::tuple<std::uniform_int_distribution<>, std::uniform_int_distribution<>>
-Costmap2D::sample_space(const std::vector<Point2D> &waypoints) const {
+CostMap2D::sample_space(const std::vector<Point2D> &waypoints) const {
   int64_t s_min_x, s_min_y, s_max_x, s_max_y;
 
   // If there are no values, the sample space should not be infinite
@@ -97,6 +97,6 @@ Costmap2D::sample_space(const std::vector<Point2D> &waypoints) const {
  * @param point The point to check for.
  * @return true if the value is in the cost map; false otherwise.
  */
-bool Costmap2D::contains(const Point2D &point) const {
+bool CostMap2D::contains(const Point2D &point) const {
   return this->sparse_costmap.contains(point);
 }

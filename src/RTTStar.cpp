@@ -2,7 +2,9 @@
 
 #include <algorithm>
 #include <map>
+#include <memory>
 #include <numeric>
+#include <utility>
 
 /**
  * Constructs the RRT Star class.
@@ -12,9 +14,9 @@
  * nearest point.
  * @param radius The radius to select nearby points from.
  */
-RTTStar::RTTStar(const Costmap2D &cost_map, double_t epsilon,
+RTTStar::RTTStar(std::unique_ptr<CostMap2D> cost_map, double_t epsilon,
                  double_t radius) noexcept
-    : cost_map(cost_map), eps(epsilon), radius(radius) {
+    : cost_map(std::move(cost_map)), eps(epsilon), radius(radius) {
   this->gen = std::mt19937(std::random_device()());
 }
 
@@ -35,7 +37,7 @@ std::vector<Point2D> RTTStar::initial_path(const Point2D &start,
   this->costs.insert(std::make_pair(start, 0.0));
 
   std::tie(this->x_sample_space, this->y_sample_space) =
-      this->cost_map.sample_space(std::vector{start, goal});
+      this->cost_map->sample_space(std::vector{start, goal});
 
   while (!this->costs.contains(goal) && !this->relations.contains(goal)) {
     this->iterate();
@@ -76,7 +78,7 @@ void RTTStar::iterate() {
       std::make_tuple(x_sample_space(this->gen), y_sample_space(this->gen));
 
   // Check if the random point is valid || has already been selected
-  if (this->cost_map.get(x) == std::nullopt && !costs.contains(x)) {
+  if (this->cost_map->get(x) == std::nullopt && !costs.contains(x)) {
     // Get the point nearest to the new point
     const Point2D x_nearest = this->nearest(x);
     // Adjust the distance of the new point
@@ -201,7 +203,7 @@ bool RTTStar::obstacle_free(const Point2D &x_nearest, const Point2D &x_new) {
   // Check that none of the points are in the cost map
   return std::all_of(
       traversed.begin(), traversed.end(),
-      [this](const auto &pt) { return !this->cost_map.contains(pt); });
+      [this](const auto &pt) { return !this->cost_map->contains(pt); });
 }
 
 /**

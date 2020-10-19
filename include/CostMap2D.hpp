@@ -13,9 +13,9 @@ typedef std::tuple<int64_t, int64_t> Point2D;
  * A class which represents a 2D cost map of booleans which represent whether or
  * a coordinate is occupied.
  */
-class Costmap2D {
+class CostMap2D {
  public:
-  Costmap2D() noexcept = default;
+  CostMap2D() noexcept = default;
   std::optional<bool> update(const Point2D &point, const bool &value);
   std::optional<bool> get(const Point2D &point) const;
   [[nodiscard]] bool contains(const Point2D &point) const;
