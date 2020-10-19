@@ -1,49 +1,8 @@
-#pragma once
+#include "RTTStar.hpp"
 
-#include <tuple>
-#include <vector>
 #include <map>
 #include <algorithm>
 #include <numeric>
-#include <random>
-#include <chrono>
-
-
-#include "Costmap2D.hpp"
-
-
-template<class T>
-class RTTStar {
-public:
-    explicit RTTStar(const Costmap2D<T> &cost_map, double_t epsilon, double_t radius) noexcept;
-
-    std::vector<Point2D> initial_path(const Point2D &start, const Point2D &goal);
-    std::vector<Point2D> refine_path(size_t time);
-
-protected:
-    void iterate();
-    void reset();
-    std::vector<Point2D> path();
-
-    Point2D nearest(const Point2D &x);
-    std::vector<Point2D> near(const Point2D &point);
-    Point2D steer(const Point2D &x_nearest, const Point2D &x);
-    bool obstacle_free(const Point2D &x_nearest, const Point2D &x_new);
-
-    const Costmap2D<T> &cost_map;
-    std::optional<Point2D> start_point, end_point;
-    std::map<Point2D, double_t> costs;
-    std::map<Point2D, Point2D> relations;
-
-private:
-    std::vector<Point2D> traversed_points(const Point2D &x_nearest, const Point2D &x_new);
-    inline double_t distance(const Point2D &first_point, const Point2D &second_point);
-
-    const double_t eps, radius;
-
-    std::mt19937 gen;
-    std::uniform_int_distribution<> x_sample_space, y_sample_space;
-};
 
 /**
  * Constructs the RRT Star class.
@@ -53,8 +12,7 @@ private:
  * @param epsilon The maximum distance the new point can be away from the nearest point.
  * @param radius The radius to select nearby points from.
  */
-template<class T>
-RTTStar<T>::RTTStar(const Costmap2D<T> &cost_map, double_t epsilon, double_t radius) noexcept : cost_map(cost_map), eps(epsilon), radius(radius) {
+RTTStar::RTTStar(const Costmap2D &cost_map, double_t epsilon, double_t radius) noexcept : cost_map(cost_map), eps(epsilon), radius(radius) {
     this->gen = std::mt19937(std::random_device()());
 }
 
@@ -66,8 +24,7 @@ RTTStar<T>::RTTStar(const Costmap2D<T> &cost_map, double_t epsilon, double_t rad
  * @param goal The goal point of the path.
  * @return The first path constructed between the start and goal.
  */
-template<class T>
-std::vector<Point2D> RTTStar<T>::initial_path(const Point2D &start, const Point2D &goal) {
+std::vector<Point2D> RTTStar::initial_path(const Point2D &start, const Point2D &goal) {
     this->reset();
 
     this->start_point = start;
@@ -91,8 +48,7 @@ std::vector<Point2D> RTTStar<T>::initial_path(const Point2D &start, const Point2
  * @param time The amount of time in milliseconds to refine the path for.
  * @return Returns the refined path.
  */
-template<class T>
-std::vector<Point2D> RTTStar<T>::refine_path(size_t time) {
+std::vector<Point2D> RTTStar::refine_path(size_t time) {
     const auto end_time = std::chrono::system_clock::now() + std::chrono::milliseconds(time);;
 
     // Run the function for approximately the specified amount of time
@@ -108,8 +64,7 @@ std::vector<Point2D> RTTStar<T>::refine_path(size_t time) {
  *
  * @tparam T The associated cost_map data type.
  */
-template<class T>
-void RTTStar<T>::iterate() {
+void RTTStar::iterate() {
     // Return if the start or end points were not set
     if (!this->start_point.has_value() or !this->end_point.has_value()) {
         return;
@@ -151,8 +106,7 @@ void RTTStar<T>::iterate() {
  *
  * @tparam T The associated cost_map data type.
  */
-template<class T>
-void RTTStar<T>::reset() {
+void RTTStar::reset() {
     this->costs.clear();
     this->relations.clear();
     this->start_point = std::nullopt;
@@ -165,8 +119,7 @@ void RTTStar<T>::reset() {
  * @tparam T The associated cost_map data type.
  * @return Return the current optimal path or an empty path if a path does not exist.
  */
-template<class T>
-std::vector<Point2D> RTTStar<T>::path() {
+std::vector<Point2D> RTTStar::path() {
     // Check if there if the start and goal have not been set
     if (!this->start_point.has_value() or !this->end_point.has_value()) {
         return std::vector<Point2D>{};
@@ -196,8 +149,7 @@ std::vector<Point2D> RTTStar<T>::path() {
  * @param x The point to find a point near.
  * @return The nearest point to a point.
  */
-template<class T>
-Point2D RTTStar<T>::nearest(const Point2D &x) {
+Point2D RTTStar::nearest(const Point2D &x) {
     const auto it = std::min_element(this->costs.begin(), this->costs.end(), [&x, this](const auto &a, const auto &b) {
         return this->distance(a.first, x) < this->distance(b.first, x) and a.first != x;
     });
@@ -213,8 +165,7 @@ Point2D RTTStar<T>::nearest(const Point2D &x) {
  * @param x The ideal move position.
  * @return The new point to move to.
  */
-template<class T>
-Point2D RTTStar<T>::steer(const Point2D &x_nearest, const Point2D &x) {
+Point2D RTTStar::steer(const Point2D &x_nearest, const Point2D &x) {
     const auto dist = this->distance(x_nearest, x);
 
     if (dist >= this->eps) {
@@ -235,8 +186,7 @@ Point2D RTTStar<T>::steer(const Point2D &x_nearest, const Point2D &x) {
  * @param x_new The point that will be moved to.
  * @return The
  */
-template<class T>
-bool RTTStar<T>::obstacle_free(const Point2D &x_nearest, const Point2D &x_new) {
+bool RTTStar::obstacle_free(const Point2D &x_nearest, const Point2D &x_new) {
     const auto traversed = traversed_points(x_nearest, x_new);
 
     // Check that none of the points are in the cost map
@@ -253,8 +203,7 @@ bool RTTStar<T>::obstacle_free(const Point2D &x_nearest, const Point2D &x_new) {
  * @param x_new The associated cost_map data type.
  * @return The points that fall on the line.
  */
-template<class T>
-std::vector<Point2D> RTTStar<T>::traversed_points(const Point2D &x_nearest, const Point2D &x_new) {
+std::vector<Point2D> RTTStar::traversed_points(const Point2D &x_nearest, const Point2D &x_new) {
     std::vector<Point2D> intersections;
 
     // The change
@@ -314,8 +263,7 @@ std::vector<Point2D> RTTStar<T>::traversed_points(const Point2D &x_nearest, cons
  * @param second_point A point to get the distance between.
  * @return The distance between the two points.
  */
-template<class T>
-inline double_t RTTStar<T>::distance(const Point2D &first_point, const Point2D &second_point) {
+inline double_t RTTStar::distance(const Point2D &first_point, const Point2D &second_point) {
     return std::sqrt(static_cast<double_t>(std::pow(std::get<0>(first_point) - std::get<0>(second_point), 2) + std::pow(std::get<1>(first_point) - std::get<1>(second_point), 2)));
 }
 
@@ -326,8 +274,7 @@ inline double_t RTTStar<T>::distance(const Point2D &first_point, const Point2D &
  * @param point The points to find nearby points for.
  * @return The nearby points.
  */
-template<class T>
-std::vector<Point2D> RTTStar<T>::near(const Point2D &point) {
+std::vector<Point2D> RTTStar::near(const Point2D &point) {
     std::vector<Point2D> near;
 
     std::for_each(this->costs.begin(), this->costs.end(), [&](const auto &p) {
