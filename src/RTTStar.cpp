@@ -203,17 +203,17 @@ std::vector<Point2D> RTTStar::traversed_points(const Point2D &x_nearest, const P
         // Get the sign of the slope and slope
         const double_t sign = (delta_y * delta_x > 0) ? 1 : ((delta_y * delta_x < 0) ? -1 : 0);
         const double_t delta_error = std::abs(static_cast<double_t>(delta_y) / static_cast<double_t>(delta_x));
-        
+
         // Get the x indices to traverse
         std::vector<int64_t> indices(std::abs(delta_x) + 1);
         std::iota(indices.begin(), indices.end(), std::min(std::get<0>(x_new), std::get<0>(x_nearest)));
 
         intersections.reserve(indices.size());
-        
+
         // Get the y value associated with the smallest x value
         int64_t y = std::min(std::get<0>(x_new), std::get<0>(x_nearest)) == std::get<0>(x_new) ? std::get<1>(x_new) : std::get<1>(x_nearest);
         double_t error = 0.0;
-        
+
         // Collect all of the points intersecting on the line
         std::for_each(indices.begin(), indices.end(), [&error, &y, &sign, &delta_error, &intersections](const auto &x) {
             intersections.emplace_back(std::make_tuple(x, y));
@@ -230,10 +230,10 @@ std::vector<Point2D> RTTStar::traversed_points(const Point2D &x_nearest, const P
         std::iota(indices.begin(), indices.end(), std::min(std::get<1>(x_new), std::get<1>(x_nearest)));
 
         intersections.reserve(indices.size());
-        
-        // Get the x value 
+
+        // Get the x value
         const int64_t x = std::get<0>(x_new);
-        
+
         // Collect all of the points on the line
         std::transform(indices.begin(), indices.end(), std::back_inserter(intersections), [&x](const auto &y) {
             return std::make_tuple(x, y);
@@ -256,7 +256,7 @@ inline double_t RTTStar::distance(const Point2D &first_point, const Point2D &sec
 
 /**
  * Returns the points nearby a point.
- * 
+ *
  * @param point The points to find nearby points for.
  * @return The nearby points.
  */
@@ -271,4 +271,3 @@ std::vector<Point2D> RTTStar::near(const Point2D &point) {
 
     return near;
 }
-
