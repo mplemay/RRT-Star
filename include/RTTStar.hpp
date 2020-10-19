@@ -8,6 +8,9 @@
 #include "CostMap2D.hpp"
 
 
+/**
+ * A single-threaded implementation of the RRT Star path finding algorithm.
+ */
 class RTTStar {
 public:
     explicit RTTStar(const Costmap2D &cost_map, double_t epsilon, double_t radius) noexcept;

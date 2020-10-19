@@ -9,6 +9,9 @@
  */
 typedef std::tuple<int64_t, int64_t> Point2D;
 
+/**
+ * A class which represents a 2D cost map of booleans which represent whether or a coordinate is occupied.
+ */
 class Costmap2D {
 public:
     Costmap2D() noexcept = default;

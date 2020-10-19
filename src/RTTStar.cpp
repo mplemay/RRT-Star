@@ -7,7 +7,6 @@
 /**
  * Constructs the RRT Star class.
  *
- * @tparam T The associated cost_map data type.
  * @param cost_map The cost_map to perform path finding on.
  * @param epsilon The maximum distance the new point can be away from the nearest point.
  * @param radius The radius to select nearby points from.
@@ -19,7 +18,6 @@ RTTStar::RTTStar(const Costmap2D &cost_map, double_t epsilon, double_t radius) n
 /**
  * Constructs an initial path between two points.
  *
- * @tparam T The associated cost_map data type.
  * @param start The starting point of the path.
  * @param goal The goal point of the path.
  * @return The first path constructed between the start and goal.
@@ -44,7 +42,6 @@ std::vector<Point2D> RTTStar::initial_path(const Point2D &start, const Point2D &
 /**
  * Iterates on the current path in order to refine it.
  *
- * @tparam T The associated cost_map data type.
  * @param time The amount of time in milliseconds to refine the path for.
  * @return Returns the refined path.
  */
@@ -61,8 +58,6 @@ std::vector<Point2D> RTTStar::refine_path(size_t time) {
 
 /**
  * Iterates on the current path in order to refine it.
- *
- * @tparam T The associated cost_map data type.
  */
 void RTTStar::iterate() {
     // Return if the start or end points were not set
@@ -103,8 +98,6 @@ void RTTStar::iterate() {
 
 /**
  * Resets the class so that it can be re-run on an updated map.
- *
- * @tparam T The associated cost_map data type.
  */
 void RTTStar::reset() {
     this->costs.clear();
@@ -116,7 +109,6 @@ void RTTStar::reset() {
 /**
  * Returns the current path
  *
- * @tparam T The associated cost_map data type.
  * @return Return the current optimal path or an empty path if a path does not exist.
  */
 std::vector<Point2D> RTTStar::path() {
@@ -145,7 +137,6 @@ std::vector<Point2D> RTTStar::path() {
 /**
  * Returns the nearest point to a point.
  *
- * @tparam T The associated cost_map data type.
  * @param x The point to find a point near.
  * @return The nearest point to a point.
  */
@@ -160,7 +151,6 @@ Point2D RTTStar::nearest(const Point2D &x) {
 /**
  * Limits the maximum step size of a move.
  *
- * @tparam T The associated cost_map data type.
  * @param x_nearest The anchor point which you can only move a certain distance away from.
  * @param x The ideal move position.
  * @return The new point to move to.
@@ -181,7 +171,6 @@ Point2D RTTStar::steer(const Point2D &x_nearest, const Point2D &x) {
 /**
  * Checks if the line
  *
- * @tparam T The associated cost_map data type.
  * @param x_nearest The nearest point to x_new
  * @param x_new The point that will be moved to.
  * @return The
@@ -198,7 +187,6 @@ bool RTTStar::obstacle_free(const Point2D &x_nearest, const Point2D &x_new) {
 /**
  * Returns the points that fall on a line.
  *
- * @tparam T The associated cost_map data type.
  * @param x_nearest A point on the line.
  * @param x_new The associated cost_map data type.
  * @return The points that fall on the line.
@@ -258,7 +246,6 @@ std::vector<Point2D> RTTStar::traversed_points(const Point2D &x_nearest, const P
 /**
  * Returns the euclidean distance between two points.
  *
- * @tparam T The associated cost_map data type.
  * @param first_point A point to get the distance between.
  * @param second_point A point to get the distance between.
  * @return The distance between the two points.
@@ -270,7 +257,6 @@ inline double_t RTTStar::distance(const Point2D &first_point, const Point2D &sec
 /**
  * Returns the points nearby a point.
  * 
- * @tparam T The associated cost_map data type. 
  * @param point The points to find nearby points for.
  * @return The nearby points.
  */
