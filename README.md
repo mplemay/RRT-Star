@@ -17,6 +17,10 @@ python3 -m pip install -U setuptools pip
 ```sh
 python3 -m pip install -r requirements.txt
 ```
+5. (Optional) Install the pre-commit hook (requires clang-format and cppcheck to be installed on the system)
+```sh
+python3 -m pre_commit install
+```
 
 ### Building
 1. Setup the build system (GCC Example) in the project's root directory
@@ -52,7 +56,5 @@ Refined path (size = 29): (100,100) (95,93) (90,88) (84,84) (83,84) (79,79) (78,
 
 ## Notes
 - This program was optimized for memory usage. Thus, it uses a sparse costmap, limited chaching of results, etc.
-- The cost map is templated so that different values types can be used.
-- Currently the RTTStar and Costmap2D are header-only they could be made libraries if there is
 - This implementation currently assumes that if the costmap has a coordinate it is not accessible.
-- It also assumes that this should be used in a single threaded environment. Futures and locks could be added with an added increase in code complexity.
+- It also assumes that this should be used in a single threaded environment. Futures, locks, and threading could be added to increase performance.
