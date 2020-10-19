@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <numeric>
 
-#include "Costmap2D.hpp"
-#include "RTTStar.hpp"
+#include <CostMap2D.hpp>
+#include <RTTStar.hpp>
 
 /**
  * Prompts the users for a value.
@@ -42,8 +42,8 @@ Point2D prompt_point() {
  * @param border_size The size of the borders.
  * @return The populated cost map.
  */
-Costmap2D<bool> make_cost_map(const size_t &border_size) {
-    Costmap2D<bool> cost_map;
+Costmap2D make_cost_map(const size_t &border_size) {
+    Costmap2D cost_map;
 
     std::vector<size_t> indices(border_size);
     std::iota(indices.begin(), indices.end(), 0);
@@ -53,7 +53,7 @@ Costmap2D<bool> make_cost_map(const size_t &border_size) {
     std::uniform_int_distribution<bool> distribution(false,true);
 
     std::for_each(indices.begin(), indices.end(), [&cost_map, &indices, &distribution, &generator](const auto &i) {
-        std::for_each(indices.begin(), indices.end(), [&cost_map, &indices, &distribution, &generator](const auto &i) {
+        std::for_each(indices.begin(), indices.end(), [&cost_map, &distribution, &generator](const auto &i) {
             if (distribution(generator)) {
                 cost_map.update(std::make_tuple(i, 0), true);
             }
@@ -81,7 +81,7 @@ int main() {
     const auto path = rtt_star.initial_path(start_point, end_point);
 
     std::cout << "Initial path (size = " << path.size() << "): ";
-    for_each(path.begin(), path.end(), [](const auto &a) {
+    std::for_each(path.begin(), path.end(), [](const auto &a) {
         std::cout << "(" <<std::get<0>(a) << "," << std::get<1>(a) << ") ";
     });
     std::cout << std::endl;
@@ -89,7 +89,7 @@ int main() {
     const auto refined_path = rtt_star.refine_path(extra_time);
 
     std::cout << "Refined path (size = " << refined_path.size() << "): ";
-    for_each(refined_path.begin(), refined_path.end(), [](const auto &a) {
+    std::for_each(refined_path.begin(), refined_path.end(), [](const auto &a) {
         std::cout << "(" << std::get<0>(a) << "," << std::get<1>(a) << ") ";
     });
     std::cout << std::endl;

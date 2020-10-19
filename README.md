@@ -1,16 +1,41 @@
-### RRT Star Implementation
-## Building
+## RRT Star
+
+### Setup
+1. Create a Python 3 Virtual Environment in the root directory of the project
+```sh
+python3 -m virtualenv venv
 ```
-cd <project_root_dir>
-mkdir -p build
-cd build/
-cmake ..
-make
+2. Activate the Virtual Environment (Fish Shell Example Below)
+```fish
+. venv/bin/activate.fish
 ```
+3. Upgrade `pip` and `setuptools`
+```sh
+python3 -m pip install -U setuptools pip
+```
+4. Install the projects requirements
+```sh
+python3 -m pip install -r requirements.txt
+```
+
+### Building
+1. Setup the build system (GCC Example) in the project's root directory
+```sh
+meson build-gcc
+```
+2. Change to the build directory
+```sh
+cd build-gcc
+```
+3. Compile the project
+```sh
+meson compile
+```
+
 ## Usage
 ```
-cd <project_root_dir>/build
-./zebra_assignment_part_2
+cd <project_root_dir>/build*
+./example
 Enter the size of the boarder square: 100
 Enter the step size (i.e. double): 5.0
 Enter the size of the neighbor search radius (i.e. double): 10.0
